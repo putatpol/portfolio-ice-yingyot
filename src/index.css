@@ -1,0 +1,224 @@
+:root {
+    --bg: #0b0612;
+    --purple: #3a1c5a;
+    --violet: #8b5cf6;
+    --gold: #c9a24b;
+    --bone: #e8dcc4;
+    --blood: #7a1630;
+  }
+  
+  * { box-sizing: border-box; margin: 0; }
+  
+  html, body { min-height: 100%; }
+  
+  body {
+    background:
+      radial-gradient(ellipse at 50% 0%, #2a1245 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, #2b0a18 0%, transparent 55%),
+      var(--bg);
+    color: var(--bone);
+    font-family: "IM Fell English", serif;
+    overflow-x: hidden;
+  }
+  
+  /* vignette ขอบมืด */
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.75) 100%);
+    z-index: 5;
+  }
+  
+  /* ---------- ดวงดาว ---------- */
+  .stars { position: fixed; inset: 0; z-index: 0; }
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--bone);
+    border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: .15; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.6); }
+  }
+  
+  /* ---------- หมอก ---------- */
+  .fog {
+    position: fixed; inset: auto 0 0 0; height: 40vh;
+    z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 20% 100%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(122,22,48,.18), transparent 60%);
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    from { transform: translateX(-3%); }
+    to   { transform: translateX(3%); }
+  }
+  
+  /* ---------- Layout ---------- */
+  .stage {
+    position: relative; z-index: 2;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%;
+    padding: 1.25rem 0.5rem 1rem;
+    gap: 1rem;
+  }
+  
+  .title { text-align: center; }
+  .title .moon { color: var(--gold); letter-spacing: .6em; font-size: 1.1rem; }
+  .title h1 {
+    font-family: "Cinzel Decorative", serif;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    color: var(--bone);
+    text-shadow: 0 0 12px var(--violet), 0 0 32px rgba(139,92,246,.5);
+    margin: .3rem 0;
+  }
+  .title p { font-style: italic; color: var(--gold); letter-spacing: .15em; }
+  
+  /* ---------- กรอบ ---------- */
+  .frame {
+    position: relative;
+    flex: 1 1 auto;
+    width: min(1480px, 98vw);
+    max-width: 98vw;
+    padding: clamp(12px, 1.8vw, 24px);
+    background: linear-gradient(145deg, #1a0d2b, #0e0718);
+    border: 2px solid var(--gold);
+    border-radius: 6px;
+    box-shadow:
+      inset 0 0 0 6px #0b0612,
+      inset 0 0 0 7px rgba(201,162,75,.5),
+      0 0 40px rgba(139,92,246,.35),
+      0 0 120px rgba(122,22,48,.25);
+    animation: glow 5s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    to {
+      box-shadow:
+        inset 0 0 0 6px #0b0612,
+        inset 0 0 0 7px rgba(201,162,75,.5),
+        0 0 60px rgba(139,92,246,.55),
+        0 0 140px rgba(122,22,48,.35);
+    }
+  }
+  
+  .book {
+    position: relative;
+    width: 100%;
+    min-height: clamp(560px, calc(100svh - 11rem), 980px);
+    height: clamp(560px, calc(100svh - 11rem), 980px);
+    background: #000;
+    border: 1px solid rgba(201,162,75,.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .flipbook-root {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+    box-sizing: border-box;
+  }
+  .flipbook-root--loading,
+  .flipbook-root--error {
+    color: var(--gold);
+    text-align: center;
+    font-size: 0.95rem;
+  }
+  .flipbook-error-detail {
+    opacity: 0.75;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+  }
+  .flipbook {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  }
+  .flipbook-page {
+    background: #fff;
+    overflow: hidden;
+  }
+  .flipbook-page img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #fff;
+  }
+  .flipbook-page-placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #1a1028, #0b0612);
+    color: var(--gold);
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+  }
+  .flipbook-controls {
+    position: absolute;
+    bottom: 0.85rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--gold);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(201, 162, 75, 0.35);
+    background: rgba(11, 6, 18, 0.82);
+    backdrop-filter: blur(6px);
+  }
+  .flipbook-controls button {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 162, 75, 0.55);
+    background: rgba(11, 6, 18, 0.85);
+    color: var(--gold);
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .flipbook-controls button:hover {
+    background: rgba(139, 92, 246, 0.25);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.35);
+  }
+  .flipbook-hint {
+    display: none;
+  }
+  
+  /* ---------- มุมลายโกธิก ---------- */
+  .corner {
+    position: absolute;
+    width: clamp(40px, 7vw, 80px);
+    color: var(--gold);
+    filter: drop-shadow(0 0 4px rgba(201,162,75,.6));
+    pointer-events: none;
+  }
+  .tl { top: -2px;    left: -2px; }
+  .tr { top: -2px;    right: -2px;  transform: scaleX(-1); }
+  .bl { bottom: -2px; left: -2px;   transform: scaleY(-1); }
+  .br { bottom: -2px; right: -2px;  transform: scale(-1, -1); }
+  
+  footer {
+    margin-top: auto;
+    color: var(--gold);
+    letter-spacing: .12em;
+    font-size: .95rem;
+  }
+  footer span { margin: 0 .6rem; color: var(--violet); }
